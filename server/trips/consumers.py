@@ -38,6 +38,14 @@ class TaxiConsumer(AsyncJsonWebsocketConsumer):
         trip = await self._create_trip(data)
         trip_data = await self._get_trip_data(trip)
 
+        await self.channel_layer.group_send(
+            group="drivers",
+            message={
+                "type": "echo.message",
+                "data": trip_data,
+            },
+        )
+
         await self.send_json(
             {
                 "type": "echo.message",
