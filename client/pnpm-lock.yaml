@@ -2,6 +2,7 @@ dependencies:
   '@testing-library/jest-dom': 4.2.4
   '@testing-library/react': 9.5.0_react-dom@16.13.1+react@16.13.1
   '@testing-library/user-event': 7.2.1
+  axios: 0.20.0
   bootstrap: 4.5.2
   bootswatch: 4.5.2
   formik: 2.1.5_react@16.13.1
@@ -2558,6 +2559,12 @@ packages:
   /aws4/1.10.1:
     resolution:
       integrity: sha512-zg7Hz2k5lI8kb7U32998pRRFin7zJlkfezGJjUc2heaD4Pw2wObakCDVzkKztTm/Ln7eiVvYsjqak0Ed4LkMDA==
+  /axios/0.20.0:
+    dependencies:
+      follow-redirects: 1.13.0
+    dev: false
+    resolution:
+      integrity: sha512-ANA4rr2BDcmmAQLOKft2fufrtuvlqR+cXNNinUmvfeSNCOF98PZL+7M/v1zIdGo7OLjEA9J2gXJL+j4zGsl0bA==
   /axobject-query/2.2.0:
     dev: false
     resolution:
@@ -12258,6 +12265,7 @@ specifiers:
   '@testing-library/jest-dom': ^4.2.4
   '@testing-library/react': ^9.3.2
   '@testing-library/user-event': ^7.1.2
+  axios: ^0.20.0
   bootstrap: ^4.5.2
   bootswatch: ^4.5.2
   cypress: ^5.1.0
