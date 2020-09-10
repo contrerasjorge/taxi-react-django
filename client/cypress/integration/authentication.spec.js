@@ -41,14 +41,33 @@ describe('Authentication', function () {
   });
 
   it('Can sign up.', function () {
+    cy.server();
+    cy.route({
+      method: 'POST',
+      url: '**/api/sign_up/**',
+      status: 201,
+      response: {
+        id: 1,
+        username: 'gary.cole@example.com',
+        first_name: 'Gary',
+        last_name: 'Cole',
+        group: 'driver',
+        photo: '/media/images/photo.jpg',
+      },
+    }).as('signUp');
+
     cy.visit('/#/sign-up');
     cy.get('input#username').type('gary.cole@example.com');
     cy.get('input#firstName').type('Gary');
     cy.get('input#lastName').type('Cole');
     cy.get('input#password').type('pAssw0rd', { log: false });
     cy.get('select#group').select('driver');
+
+    // Handle file upload
     cy.get('input#photo').attachFile('images/photo.jpg');
+
     cy.get('button').contains('Sign up').click();
+    cy.wait('@signUp');
     cy.hash().should('eq', '#/log-in');
   });
 
@@ -82,6 +101,33 @@ describe('Authentication', function () {
         'Note that both fields may be case-sensitive.'
     );
     cy.hash().should('eq', '#/log-in');
+  });
+
+  it('Show invalid fields on sign up error.', function () {
+    cy.server();
+    cy.route({
+      method: 'POST',
+      url: '**/api/sign_up/**',
+      status: 400,
+      response: {
+        username: ['A user with that username already exists.'],
+      },
+    }).as('signUp');
+    cy.visit('/#/sign-up');
+    cy.get('input#username').type('gary.cole@example.com');
+    cy.get('input#firstName').type('Gary');
+    cy.get('input#lastName').type('Cole');
+    cy.get('input#password').type('pAssw0rd', { log: false });
+    cy.get('select#group').select('driver');
+
+    // Handle file upload
+    cy.get('input#photo').attachFile('images/photo.jpg');
+    cy.get('button').contains('Sign up').click();
+    cy.wait('@signUp');
+    cy.get('div.invalid-feedback').contains(
+      'A user with that username already exists'
+    );
+    cy.hash().should('eq', '#/sign-up');
   });
 
   it('Can log out.', function () {
