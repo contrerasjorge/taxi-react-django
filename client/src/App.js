@@ -6,6 +6,8 @@ import { Route, Link, Switch, Redirect } from 'react-router-dom';
 
 import SignUp from './components/SignUp';
 import LogIn from './components/LogIn';
+import Driver from './components/Driver';
+import Rider from './components/Rider';
 
 import './App.css';
 
@@ -70,6 +72,8 @@ function App() {
               </div>
             )}
           />
+          <Route path="/driver" render={() => <Driver />} />
+          <Route path="/rider" render={() => <Rider />} />
           <Route
             path="/sign-up"
             render={() => (isLoggedIn ? <Redirect to="/" /> : <SignUp />)}
