@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Button, Container, Form, Navbar } from 'react-bootstrap';
+import { Button, Container, Form, Nav, Navbar } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Route, Link, Switch, Redirect } from 'react-router-dom';
 
+import { isDriver, isRider } from './services/AuthService';
 import SignUp from './components/SignUp';
 import LogIn from './components/LogIn';
 import Driver from './components/Driver';
@@ -60,13 +61,23 @@ function App() {
               <div className="middle-center">
                 <h1 className="landing logo">Taxi</h1>
                 {!isLoggedIn && (
-                  <Link id="signUp" className="btn btn-primary" to="/sign-up">
-                    Sign up
+                  <>
+                    <Link id="signUp" className="btn btn-primary" to="/sign-up">
+                      Sign up
+                    </Link>
+                    <Link id="logIn" className="btn btn-primary" to="/log-in">
+                      Log in
+                    </Link>
+                  </>
+                )}
+                {isRider() && (
+                  <Link className="btn btn-primary" to="/rider">
+                    Dashboard
                   </Link>
                 )}
-                {!isLoggedIn && (
-                  <Link id="logIn" className="btn btn-primary" to="/log-in">
-                    Log in
+                {isDriver() && (
+                  <Link className="btn btn-primary" to="/driver">
+                    Dashboard
                   </Link>
                 )}
               </div>
