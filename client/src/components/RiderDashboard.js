@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Breadcrumb, Col, Row } from 'react-bootstrap';
+import { webSocket } from 'rxjs/webSocket';
+import { toast } from 'react-toastify';
 
+import { getAccessToken } from '../services/AuthService';
 import TripCard from './TripCard';
 import { getTrips } from '../services/TripService';
 
@@ -18,6 +21,33 @@ function RiderDashboard(props) {
     };
     loadTrips();
   }, []);
+
+  useEffect(() => {
+    const token = getAccessToken();
+    const ws = webSocket(`ws://localhost:8003/taxi/?token=${token}`);
+    const subscription = ws.subscribe((message) => {
+      setTrips((prevTrips) => [
+        ...prevTrips.filter((trip) => trip.id !== message.data.id),
+        message.data,
+      ]);
+      updateToast(message.data);
+    });
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  const updateToast = (trip) => {
+    if (trip.status === 'STARTED') {
+      toast.info(`Driver ${trip.driver.username} is coming to pick you up.`);
+    } else if (trip.status === 'IN_PROGRESS') {
+      toast.info(
+        `Driver ${trip.driver.username} is headed to your destination.`
+      );
+    } else if (trip.status === 'COMPLETED') {
+      toast.info(`Driver ${trip.driver.username} has dropped you off.`);
+    }
+  };
 
   const getCurrentTrips = () => {
     return trips.filter((trip) => {
